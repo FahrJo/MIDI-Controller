@@ -36,6 +36,7 @@ int darkVal = 127;
 int highVal = 255;
 int maxVal[15] = {darkVal, 0, 0, darkVal, 0, 0, darkVal, 0, 0, darkVal, 0, 0, darkVal, 0, 0};     //Maximalhelligkeit für die einzelnen Taster
 
+boolean startAni = true;
 boolean enterMenue = false;
 boolean enterMenu1 = false;
 
@@ -105,6 +106,12 @@ void setup() {
   pinMode(inB, INPUT);
   pinMode(inP, INPUT);
 
+  digitalWrite(out1, HIGH);
+  digitalWrite(out2, HIGH);
+  digitalWrite(out3, HIGH);
+  digitalWrite(out4, HIGH);
+  digitalWrite(out5, HIGH);
+
   //digitalWrite(in1, HIGH);
   digitalWrite(in2, HIGH);
   digitalWrite(in3, HIGH);
@@ -117,32 +124,6 @@ void setup() {
   digitalWrite(inP, HIGH);
 
   // memcpy (colorArray, colorArFix, 17);
-
-  // Startup Animation
-  /*  int i = 0;
-    while (i < 5) {
-      if (i == 0) {
-        digitalWrite(out1, LOW);
-      }
-      else if (i == 1) {
-        digitalWrite(out1, HIGH);
-        digitalWrite(out2, LOW);
-      }
-      else if (i == 2) {
-        digitalWrite(out2, HIGH);
-        digitalWrite(out3, LOW);
-      }
-      else if (i == 3) {
-        digitalWrite(out3, HIGH);
-        digitalWrite(out4, LOW);
-      }
-      else if (i == 4) {
-        digitalWrite(out4, HIGH);
-        digitalWrite(out5, LOW);
-      }
-      i++;
-      delay(50);
-    }*/
 }
 
 void loop() {
@@ -156,7 +137,52 @@ void loop() {
   push1 = digitalRead(inP);
   encoderPinA = digitalRead(inA);
 
+  // Startup Animation
+  if (startAni == true) {
+    for (int i = 0; i < 14; i++) {
+      if (i < 5) {
+        analogWrite(outR, 127);
+      }
+      if (i > 4 && i < 9) {
+        analogWrite(outR, 0);
+        analogWrite(outG, 127);
+      }
+      if (i > 8) {
+        analogWrite(outG, 0);
+        analogWrite(outB, 127);
+      }
 
+      if (i == 0 || i == 8 || i == 9) {
+        digitalWrite(out2, HIGH);
+        digitalWrite(out1, LOW);
+
+      }
+      else if (i == 1 || i == 7 || i == 10) {
+        digitalWrite(out1, HIGH);
+        digitalWrite(out2, LOW);
+        digitalWrite(out3, HIGH);
+      }
+      else if (i == 2 || i == 6 || i == 11) {
+        digitalWrite(out2, HIGH);
+        digitalWrite(out3, LOW);
+        digitalWrite(out4, HIGH);
+      }
+      else if (i == 3 || i == 5 || i == 12) {
+        digitalWrite(out3, HIGH);
+        digitalWrite(out4, LOW);
+        digitalWrite(out5, HIGH);
+      }
+      else if (i == 4 || i == 13) {
+        digitalWrite(out4, HIGH);
+        digitalWrite(out5, LOW);
+      }
+      delay(75);
+      if (i == 13) {
+        delay(25);
+        startAni = false;
+      }
+    }
+  }
 
   // Helligkeitswahl der Taster mit schalter1
   if (schalter1 == LOW && schalter1Alt == HIGH) {
@@ -236,7 +262,7 @@ void loop() {
 
 
   // Menü
-  if (millis() <= 1000) {
+  if (millis() <= 2000) {
     if (taste1 == HIGH && taste1Alt == LOW && taste5 == HIGH && taste5Alt == LOW) {
       enterMenue = true;
       taste1Alt = taste1;
@@ -448,4 +474,3 @@ void loop() {
     }
   }
 }
-
