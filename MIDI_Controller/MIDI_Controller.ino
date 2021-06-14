@@ -1,28 +1,28 @@
 #include <EEPROM.h>
 
 // Tastereingänge 1-5
-int in1 = 5;
-int in2 = 8;
-int in3 = 12;
-int in4 = 13;
-int in5 = A0;
+const int in1 = 5;
+const int in2 = 8;
+const int in3 = 12;
+const int in4 = 13;
+const int in5 = A0;
 // Schaltereingänge 1-2
-int in6 = A1;
-int in7 = A5;
+const int in6 = A1;
+const int in7 = A5;
 // Push-Encodereingang
-int inA = A3;
-int inB = A4;
-int inP = A2;
+const int inA = A3;
+const int inB = A4;
+const int inP = A2;
 
 // PWM-Ausgänge für Tasterbeleuchtung
-int out1 = 2;   //GND für Tasterbeleuchtung 1   //Magenta
-int out2 = 4;   //GND für Tasterbeleuchtung 2   //Magenta
-int out3 = 6;   //GND für Tasterbeleuchtung 3   //Rot
-int out4 = 7;   //GND für Tasterbeleuchtung 4   //Gelb
-int out5 = 9;   //GND für Tasterbeleuchtung 5   //Grün
-int outR = 3;   //Value für Rot  (Multiplex)
-int outG = 10;  //Value für Grün (Multiplex)
-int outB = 11;  //Value für Blau (Multiplex)
+const int out1 = 2;   //GND für Tasterbeleuchtung 1   //Magenta by default
+const int out2 = 4;   //GND für Tasterbeleuchtung 2   //Magenta by default
+const int out3 = 6;   //GND für Tasterbeleuchtung 3   //Rot by default
+const int out4 = 7;   //GND für Tasterbeleuchtung 4   //Gelb by default
+const int out5 = 9;   //GND für Tasterbeleuchtung 5   //Grün by default
+const int outR = 3;   //Value für Rot  (Multiplex)
+const int outG = 10;  //Value für Grün (Multiplex)
+const int outB = 11;  //Value für Blau (Multiplex)
 
 // Color-Definition der Taster
 //                     R1   G1   B1   R2   G2   B2   R3   G3   B3   R4   G4   B4   R5   G5   B5
@@ -76,8 +76,15 @@ int note6 = 41;         //F2
 int note7 = 42;         //F#2
 int note8 = 43;         //G2
 
-int valHigh = 127;      //Velocity für HIGH
-int valLow = 0;         //Velocity für LOW
+int velHigh = 127;      //Velocity für HIGH
+int velLow = 0;         //Velocity für LOW
+
+
+void sendNote(int note, int velocity) {
+  Serial.write(channelData);
+  Serial.write(note);
+  Serial.write(velocity);
+}
 
 
 void setup() {
@@ -125,6 +132,7 @@ void setup() {
 
   // memcpy (colorArray, colorArFix, 17);
 }
+
 
 void loop() {
   taste1 = digitalRead(in1);
@@ -184,6 +192,7 @@ void loop() {
     }
   }
 
+
   // Helligkeitswahl der Taster mit schalter1
   if (schalter1 == LOW && schalter1Alt == HIGH) {
     darkVal = 50;
@@ -205,6 +214,7 @@ void loop() {
     maxVal[12] = darkVal;
     schalter1Alt = schalter1;
   }
+
 
   // Tasten-Illumination
   for (int i = 0; i < 15; i = i + 3) {
@@ -258,7 +268,6 @@ void loop() {
 
 
   }
-
 
 
   // Menü
@@ -350,85 +359,62 @@ void loop() {
   if (enterMenue == false) {
     // Taste 1
     if (taste1 == LOW && taste1Alt == HIGH) {
-
-      Serial.write(channelData);
-      Serial.write(note1);
-      Serial.write(valLow);
+      sendNote(note1, velLow);
       taste1Alt = taste1;
       maxVal[0] = darkVal;
     }
     if (taste1 == HIGH && taste1Alt == LOW) {
-      Serial.write(channelData);
-      Serial.write(note1);
-      Serial.write(valHigh);
+      sendNote(note1, velHigh);
       taste1Alt = taste1;
       maxVal[0] = highVal;
     }
 
     // Taste 2
     if (taste2 == LOW && taste2Alt == HIGH) {
-      Serial.write(channelData);
-      Serial.write(note2);
-      Serial.write(valLow);
+      sendNote(note2, velLow);
       taste2Alt = taste2;
       maxVal[3] = darkVal;
     }
     if (taste2 == HIGH && taste2Alt == LOW) {
-      Serial.write(channelData);
-      Serial.write(note2);
-      Serial.write(valHigh);
+      sendNote(note2, velHigh);
       taste2Alt = taste2;
       maxVal[3] = highVal;
     }
 
     // Taste 3
     if (taste3 == LOW && taste3Alt == HIGH) {
-      Serial.write(channelData);
-      Serial.write(note3);
-      Serial.write(valLow);
+      sendNote(note3, velLow);
       taste3Alt = taste3;
       maxVal[6] = darkVal;
     }
     if (taste3 == HIGH && taste3Alt == LOW) {
-      Serial.write(channelData);
-      Serial.write(note3);
-      Serial.write(valHigh);
+      sendNote(note3, velHigh);
       taste3Alt = taste3;
       maxVal[6] = highVal;
     }
 
     // Taste 4
     if (taste4 == LOW && taste4Alt == HIGH) {
-      Serial.write(channelData);
-      Serial.write(note4);
-      Serial.write(valLow);
+      sendNote(note4, velLow);
       taste4Alt = taste4;
       maxVal[9] = darkVal;
     }
     if (taste4 == HIGH && taste4Alt == LOW) {
-      Serial.write(channelData);
-      Serial.write(note4);
-      Serial.write(valHigh);
+      sendNote(note4, velHigh);
       taste4Alt = taste4;
       maxVal[9] = highVal;
     }
 
     // Taste 5
     if (taste5 == LOW && taste5Alt == HIGH) {
-      Serial.write(channelData);
-      Serial.write(note5);
-      Serial.write(valLow);
+      sendNote(note5, velLow);
       taste5Alt = taste5;
       maxVal[12] = darkVal;
     }
     if (taste5 == HIGH && taste5Alt == LOW) {
-      Serial.write(channelData);
-      Serial.write(note5);
-      Serial.write(valHigh);
+      sendNote(note5, velHigh);
       if (schalter2 == LOW) {                 // Bei Betätigung von schalter2 wird zu Note5 automatisch Note1 mitgesendet (Anwendugn z.B. für QLab um im Titel zu bleiben)
-        Serial.write(channelData);
-        Serial.write(note1);
-        Serial.write(valHigh);
+        sendNote(note1, velHigh);
       }
       taste5Alt = taste5;
       maxVal[12] = highVal;
@@ -436,36 +422,27 @@ void loop() {
 
     // Encoder-PushButten
     if (push1 == HIGH && push1Alt == LOW) {
-      Serial.write(channelData);
-      Serial.write(note6);
-      Serial.write(valLow);
+      sendNote(note6, velLow);
       push1Alt = push1;
     }
     if (push1 == LOW && push1Alt == HIGH) {
-      Serial.write(channelData);
-      Serial.write(note6);
-      Serial.write(valHigh);
+      sendNote(note6, velHigh);
       push1Alt = push1;
     }
 
     // Encoder
-
     if ((encoderPinAAlt == HIGH) && (encoderPinA == LOW)) {  // Check last State of Encoder pin A = 0  && n = 1
       if (millis() - debounceDelay >= millisAlt) {
         millisAlt = millis();
-        if (digitalRead(inB) == HIGH) {                        // Check current Encoder pin B = 0
+        if (digitalRead(inB) == HIGH) {                      // Check current Encoder pin B = 0
           encoderPinAAlt = encoderPinA;
-          encoderPos--;                                        // Count down Encoder value -1
-          Serial.write(channelData);
-          Serial.write(note7);
-          Serial.write(valHigh);
+          encoderPos--;                                      // Count down Encoder value -1
+          sendNote(note7, velHigh);
         }
         if (digitalRead(inB) == LOW) {
           encoderPinAAlt = encoderPinA;
-          encoderPos++;                                             // Count up Encoder value +1
-          Serial.write(channelData);
-          Serial.write(note8);
-          Serial.write(valHigh);
+          encoderPos++;                                      // Count up Encoder value +1
+          sendNote(note8, velHigh);
         }
       }
     }
