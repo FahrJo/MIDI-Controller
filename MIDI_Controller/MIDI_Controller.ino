@@ -79,9 +79,8 @@ int note8 = 43;         //G2
 int velHigh = 127;      //Velocity für HIGH
 int velLow = 0;         //Velocity für LOW
 
-
 void sendNote(int note, int velocity) {
-  Serial.write(channelData);
+  Serial.write(144);  // 1001 0000 = Note On Kanal 1#
   Serial.write(note);
   Serial.write(velocity);
 }
